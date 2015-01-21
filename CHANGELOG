@@ -1,2 +1,5 @@
+* Add 'post_number' in Move._check_modify_exclude permanently
+* Order moves by date instead of post_date
+
 Version 3.2.0 - 2015-01-13
 * Initial release
