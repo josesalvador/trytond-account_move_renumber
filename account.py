@@ -14,17 +14,10 @@ class Move:
     __name__ = 'account.move'
 
     @classmethod
-    def write(cls, *args):
-        remove_post_number = False
-        if (Transaction().context.get('account_move_renumber')
-                and 'post_number' not in cls._check_modify_exclude):
+    def __setup__(cls):
+        super(Move, cls).__setup__()
+        if 'post_number' not in cls._check_modify_exclude:
             cls._check_modify_exclude.append('post_number')
-            remove_post_number = True
-
-        super(Move, cls).write(*args)
-
-        if remove_post_number:
-            cls._check_modify_exclude.remove('post_number')
 
 
 class RenumberMovesStart(ModelView):
@@ -89,7 +82,7 @@ class RenumberMoves(Wizard):
                 ('post_number', '!=', None),
                 ],
             order=[
-                ('post_date', 'ASC'),
+                ('date', 'ASC'),
                 ('id', 'ASC'),
                 ])
         move_vals = []
@@ -98,8 +91,7 @@ class RenumberMoves(Wizard):
                         'post_number': Sequence.get_id(
                             move.period.post_move_sequence_used.id),
                         }))
-        with Transaction().set_context(account_move_renumber=True):
-            Move.write(*move_vals)
+        Move.write(*move_vals)
 
         action['pyson_domain'] = PYSONEncoder().encode([
             ('period.fiscalyear', '=', self.start.fiscalyear.id),
