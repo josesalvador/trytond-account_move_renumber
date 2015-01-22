@@ -7,7 +7,7 @@ import os
 import ConfigParser
 
 MODULE = 'account_move_renumber'
-PREFIX = 'nantic'
+PREFIX = 'trytonspain'
 MODULE2PREFIX = {}
 
 
@@ -54,7 +54,7 @@ setup(name='%s_%s' % (PREFIX, MODULE),
     author='NaN·tic',
     author_email='info@nan-tic.com',
     url='http://www.nan-tic.com/',
-    download_url="https://bitbucket.org/nantic/trytond-%s" % MODULE,
+    download_url="https://bitbucket.org/trytonspain/trytond-%s" % MODULE,
     package_dir={'trytond.modules.%s' % MODULE: '.'},
     packages=[
         'trytond.modules.%s' % MODULE,
