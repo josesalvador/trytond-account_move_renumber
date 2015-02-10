@@ -3,7 +3,6 @@
 from trytond.model import ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import PYSONEncoder
-from trytond.transaction import Transaction
 from trytond.wizard import Wizard, StateView, StateAction, Button
 
 __all__ = ['Move', 'RenumberMoves', 'RenumberMovesStart']
@@ -71,7 +70,8 @@ class RenumberMoves(Wizard):
 
         sequences = set([self.start.fiscalyear.post_move_sequence])
         for period in self.start.fiscalyear.periods:
-            sequences.add(period.post_move_sequence)
+            if period.post_move_sequence:
+                sequences.add(period.post_move_sequence)
 
         Sequence.write(list(sequences), {
                 'number_next': self.start.first_number,
