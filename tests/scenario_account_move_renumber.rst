@@ -137,7 +137,6 @@ Create and post Moves in Cash Journal::
     ...     line = move.lines.new()
     ...     line.account = cash
     ...     line.debit = Decimal(42 + i)
-    ...     line.party = customer
     ...     line = move.lines.new()
     ...     line.account = receivable
     ...     line.credit = Decimal(42 + i)
