@@ -16,8 +16,6 @@ Imports::
     ...     get_company
     >>> from trytond.modules.account.tests.tools import create_fiscalyear, \
     ...     create_chart, get_accounts, create_tax, set_tax_code
-    >>> from.trytond.modules.account_invoice.tests.tools import \
-    ...     set_fiscalyear_invoice_sequences, create_payment_term
     >>> today = datetime.date.today()
 
 Create database::
@@ -39,15 +37,9 @@ Create company::
     >>> _ = create_company()
     >>> company = get_company()
 
-Reload the context::
-
-    >>> User = Model.get('res.user')
-    >>> config._context = User.get_preferences(True, config.context)
-
 Create fiscal year::
 
-    >>> fiscalyear = set_fiscalyear_invoice_sequences(
-    ...     create_fiscalyear(company))
+    >>> fiscalyear = create_fiscalyear(company)
     >>> fiscalyear.click('create_period')
     >>> period = fiscalyear.periods[0]
 
@@ -58,6 +50,7 @@ Create chart of accounts::
     >>> receivable = accounts['receivable']
     >>> revenue = accounts['revenue']
     >>> expense = accounts['expense']
+    >>> cash = accounts['cash']
 
 Create parties::
 
@@ -89,8 +82,7 @@ Create and post Moves in Cash Journal::
     ...     line.account = receivable
     ...     line.credit = Decimal(42 + i)
     ...     line.party = customer
-    ...     move.save()
-    ...     Move.post([move.id], config.context)
+    ...     move.click('post')
 
 Check post numbers::
 
