@@ -24,19 +24,19 @@ msgstr "ID"
 
 msgctxt "model:account.move.renumber.start,name:"
 msgid "Renumber Account Moves Start"
-msgstr "Renumera asientos Inicio"
+msgstr "Renumerar asientos Inicio"
 
 msgctxt "model:ir.action,name:wizard_move_renumber"
 msgid "Renumber Moves"
-msgstr "Renumera asientos"
+msgstr "Renumerar asientos"
 
 msgctxt "model:ir.ui.menu,name:menu_move_renumber"
 msgid "Renumber Moves"
-msgstr "Renumera asientos"
+msgstr "Renumerar asientos"
 
 msgctxt "view:account.move.renumber.start:"
 msgid "Renumber Account Moves"
-msgstr "Renumera asientos"
+msgstr "Renumerar asientos"
 
 msgctxt "view:account.move.renumber.start:"
 msgid ""
@@ -52,4 +52,4 @@ msgstr "Cancelar"
 
 msgctxt "wizard_button:account.move.renumber,start,renumber:"
 msgid "Renumber"
-msgstr "Renumera"
+msgstr "Renumerar"
