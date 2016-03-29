@@ -6,10 +6,10 @@ from trytond.pyson import PYSONEncoder
 from trytond.wizard import Wizard, StateView, StateAction, Button
 
 __all__ = ['Move', 'RenumberMoves', 'RenumberMovesStart']
-__metaclass__ = PoolMeta
 
 
 class Move:
+    __metaclass__ = PoolMeta
     __name__ = 'account.move'
 
     @classmethod
