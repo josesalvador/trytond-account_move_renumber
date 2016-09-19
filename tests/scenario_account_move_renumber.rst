@@ -8,8 +8,6 @@ General Setup
 
 Imports::
 
-    >>> import datetime
-    >>> from dateutil.relativedelta import relativedelta
     >>> from decimal import Decimal
     >>> from proteus import Model, Wizard
     >>> from trytond.tests.tools import install_modules
@@ -17,7 +15,6 @@ Imports::
     ...     get_company
     >>> from trytond.modules.account.tests.tools import create_fiscalyear, \
     ...     create_chart, get_accounts, create_tax, set_tax_code
-    >>> today = datetime.date.today()
 
 Install account_move_renumber::
 
@@ -49,23 +46,19 @@ Create parties::
     >>> customer = Party(name='Customer')
     >>> customer.save()
 
-Configure Cash Journal to allow cancel moves::
+Create and post Moves in Cash Journal::
 
     >>> Journal = Model.get('account.journal')
+    >>> Move = Model.get('account.move')
     >>> journal_cash, = Journal.find([
     ...         ('code', '=', 'CASH'),
     ...         ])
-    >>> journal_cash.update_posted = True
-    >>> journal_cash.save()
-
-Create and post Moves in Cash Journal::
-
-    >>> Move = Model.get('account.move')
+    >>> moves = []
     >>> for i in range(10):
     ...     move = Move()
     ...     move.period = period
     ...     move.journal = journal_cash
-    ...     move.date = period.start_date
+    ...     move.date = period.start_date if i% 2 else period.end_date
     ...     line = move.lines.new()
     ...     line.account = cash
     ...     line.debit = Decimal(42 + i)
@@ -73,7 +66,8 @@ Create and post Moves in Cash Journal::
     ...     line.account = receivable
     ...     line.credit = Decimal(42 + i)
     ...     line.party = customer
-    ...     move.click('post')
+    ...     moves.append(move)
+    >>> Move.click(moves, 'post')
 
 Check post numbers::
 
@@ -82,12 +76,9 @@ Check post numbers::
     10
     >>> all(move.post_number == str(i + 1) for i, move in enumerate(moves))
     True
-
-Cancel and delete some moves::
-
-    >>> Move.draft([m.id for m in moves[2:4]], config.context)
-    >>> moves[2].delete()
-    >>> moves[3].delete()
+    >>> moves = Move.find([], order=[('date', 'ASC'), ('id', 'ASC')])
+    >>> all(move.post_number == str(i + 1) for i, move in enumerate(moves))
+    False
 
 Renumber moves::
 
@@ -98,10 +89,10 @@ Renumber moves::
 
 Check post numbers after renumbering::
 
-    >>> moves = Move.find([], order=[('id', 'ASC')])
+    >>> moves = Move.find([], order=[('date', 'ASC'), ('id', 'ASC')])
     >>> len(moves)
-    8
+    10
     >>> all(move.post_number == str(i + 1) for i, move in enumerate(moves))
     True
     >>> moves[-1].post_number
-    u'8'
+    u'10'
