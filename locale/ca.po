@@ -20,7 +20,7 @@ msgstr "Exercici fiscal"
 
 msgctxt "field:account.move.renumber.start,id:"
 msgid "ID"
-msgstr "ID"
+msgstr "Identificador"
 
 msgctxt "model:account.move.renumber.start,name:"
 msgid "Renumber Account Moves Start"
