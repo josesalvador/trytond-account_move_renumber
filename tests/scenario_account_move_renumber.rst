@@ -95,4 +95,4 @@ Check post numbers after renumbering::
     >>> all(move.post_number == str(i + 1) for i, move in enumerate(moves))
     True
     >>> moves[-1].post_number
-    u'10'
+    '10'

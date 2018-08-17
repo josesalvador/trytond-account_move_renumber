@@ -8,8 +8,7 @@ from trytond.wizard import Wizard, StateView, StateAction, Button
 __all__ = ['Move', 'RenumberMoves', 'RenumberMovesStart']
 
 
-class Move:
-    __metaclass__ = PoolMeta
+class Move(metaclass=PoolMeta):
     __name__ = 'account.move'
 
     @classmethod
