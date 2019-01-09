@@ -4,6 +4,8 @@ from trytond.model import ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import PYSONEncoder
 from trytond.wizard import Wizard, StateView, StateAction, Button
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
 
 __all__ = ['Move', 'RenumberMoves', 'RenumberMovesStart']
 
@@ -42,14 +44,6 @@ class RenumberMoves(Wizard):
             Button('Renumber', 'renumber', 'tryton-ok', default=True),
             ])
     renumber = StateAction('account.act_move_form')
-
-    @classmethod
-    def __setup__(cls):
-        super(RenumberMoves, cls).__setup__()
-        cls._error_messages.update({
-                'draft_moves_in_fiscalyear': (
-                    'There are Draft Moves in Fiscal Year "%(fiscalyear)s".'),
-                })
 
     def do_renumber(self, action):
         pool = Pool()
