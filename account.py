@@ -5,7 +5,7 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import PYSONEncoder
 from trytond.wizard import Wizard, StateView, StateAction, Button
 from trytond.i18n import gettext
-from trytond.exceptions import UserError
+from trytond.exceptions import UserError, UserWarning
 
 __all__ = ['Move', 'RenumberMoves', 'RenumberMovesStart']
 
@@ -49,17 +49,17 @@ class RenumberMoves(Wizard):
         pool = Pool()
         Move = pool.get('account.move')
         Sequence = pool.get('ir.sequence')
-
+        Warning = pool.get('res.user.warning')
         draft_moves = Move.search([
                 ('period.fiscalyear', '=', self.start.fiscalyear.id),
                 ('state', '=', 'draft'),
                 ])
         if draft_moves:
-            self.raise_user_warning('move_renumber_draft_moves%s'
-                    % self.start.fiscalyear.id,
-                'draft_moves_in_fiscalyear', {
-                    'fiscalyear': self.start.fiscalyear.rec_name,
-                    })
+            key = 'move_renumber_draft_moves%s' % self.start.fiscalyear.id
+            if Warning.check(key):
+                raise UserWarning(key,
+                    gettext('account_move_renumber.draft_moves_in_fiscalyear',
+                        fiscalyear=self.start.fiscalyear.rec_name))
 
         sequences = set([self.start.fiscalyear.post_move_sequence])
         for period in self.start.fiscalyear.periods:
