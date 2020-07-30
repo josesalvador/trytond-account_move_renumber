@@ -73,9 +73,9 @@ class RenumberMoves(Wizard):
             if period.post_move_sequence:
                 sequences.add(period.post_move_sequence)
 
-        Sequence.write(list(sequences), {
-                'number_next': self.start.first_number,
-                })
+        for s in sequences:
+            s.next_number = self.start.first_number
+        Sequence.save(list(sequences))
 
         moves_to_renumber = Move.search([
                 ('period.fiscalyear', '=', self.start.fiscalyear.id),
