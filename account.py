@@ -81,8 +81,8 @@ class RenumberMoves(Wizard):
         move_vals = []
         for move in moves_to_renumber:
             move_vals.extend(([move], {
-                        'post_number': Sequence.get_id(
-                            move.period.post_move_sequence_used.id),
+                        'post_number': (
+                            move.period.post_move_sequence_used.get()),
                         }))
         Move.write(*move_vals)
 
