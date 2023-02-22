@@ -48,6 +48,7 @@ class RenumberMoves(Wizard):
         Move = pool.get('account.move')
         Sequence = pool.get('ir.sequence')
         Warning = pool.get('res.user.warning')
+
         draft_moves = Move.search([
                 ('period.fiscalyear', '=', self.start.fiscalyear.id),
                 ('state', '=', 'draft'),
@@ -76,13 +77,15 @@ class RenumberMoves(Wizard):
                 ('date', 'ASC'),
                 ('id', 'ASC'),
                 ])
-        move_vals = []
+
+        to_write = []
         for move in moves_to_renumber:
-            move_vals.extend(([move], {
+            to_write.extend(([move], {
                         'post_number': (
                             move.period.post_move_sequence_used.get()),
                         }))
-        Move.write(*move_vals)
+        if to_write:
+            Move.write(*to_write)
 
         action['pyson_domain'] = PYSONEncoder().encode([
             ('period.fiscalyear', '=', self.start.fiscalyear.id),
