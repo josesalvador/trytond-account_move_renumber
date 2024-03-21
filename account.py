@@ -4,6 +4,7 @@ from trytond.model import ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import PYSONEncoder
 from trytond.wizard import Wizard, StateView, StateAction, Button
+from trytond.transaction import Transaction
 from trytond.i18n import gettext
 from trytond.exceptions import UserWarning
 
@@ -80,10 +81,13 @@ class RenumberMoves(Wizard):
 
         to_write = []
         for move in moves_to_renumber:
-            to_write.extend(([move], {
-                        'post_number': (
-                            move.period.post_move_sequence_used.get()),
-                        }))
+            with Transaction().set_context(
+                    date=move.date,
+                    company=self.start.fiscalyear.company.id):
+                to_write.extend(([move], {
+                            'post_number': (
+                                move.period.post_move_sequence_used.get()),
+                            }))
         if to_write:
             Move.write(*to_write)
 
